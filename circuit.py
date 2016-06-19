@@ -153,7 +153,7 @@ class Circuit(object):
         eigs: spectra of all eigenvalues, 
               dimension len(self.populations) x len(freqs)
         """
-        eigs = [self.ana.get_eigs_evecs(matrix, w)[0] for w in self.ana.omegas]
+        eigs = [self.ana.eigs_evecs(matrix, w)[0] for w in self.ana.omegas]
         eigs = np.transpose(np.asarray(eigs))
         return self.ana.omegas/(2.0*np.pi), eigs
 
@@ -173,11 +173,12 @@ class Circuit(object):
         evecs: spectra of all eigenvectors, 
                dimension len(self.populations) x len(freqs) x len(self.populations)
         """
-        # one list entry for every eigenvector, evecs[i][j][k] is the ith eigenvectors at the jth frequency for the kth component
+        # one list entry for every eigenvector, evecs[i][j][k] is the 
+        # ith eigenvectors at the jth frequency for the kth component
         evecs = [np.zeros((len(self.ana.omegas), self.ana.dimension), 
                           dtype=complex) for i in range(self.ana.dimension)]
         for i, w in enumerate(self.ana.omegas):
-            eig, vr, vl = self.ana.get_eigs_evecs(matrix, w)
+            eig, vr, vl = self.ana.eigs_evecs(matrix, w)
             if label == 'right':
                 v = vr
             elif label == 'left':

@@ -59,7 +59,7 @@ class TestCircuit(unittest.TestCase):
     def testCreateEigenvalueSpectra(self):
         for delay_dist in ['none','gaussian','truncated_gaussian']:
             self.net.alter_params({'delay_dist': delay_dist})
-            freqs, eigs = self.net.create_power_spectra()
+            freqs, eigs = self.net.create_eigenvalue_spectra('MH')
             eigs_test = h5.load_h5(self.test_data, delay_dist + '/eigs')
             assert (np.allclose(eigs_test, eigs, rtol=self.rtol, atol=self.atol))
 
@@ -74,7 +74,6 @@ class TestCircuit(unittest.TestCase):
                 assert (np.allclose(T_test, T, rtol=self.rtol, atol=self.atol))
 
     def testEmpiricalTransferFunction(self):
-        import matplotlib.pyplot as plt
         params = {}
         params['tf_mode'] = 'empirical' 
         params['tau_impulse'] = np.array([8.555, 5.611, 4.167, 4.381, 4.131, 3.715, 4.538, 3.003])

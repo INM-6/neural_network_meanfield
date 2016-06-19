@@ -270,3 +270,27 @@ class Analytics(object):
         Q_plus = np.linalg.inv(np.identity(self.dimension)-MH_plus)
         C = np.dot(Q_plus,np.dot(self.D,np.transpose(np.conjugate(Q_plus))))
         return np.power(abs(np.diag(C)),2)
+
+    def eigs_evecs(self, matrix, omega):
+        """Returns eigenvalues and left and right eigenvectors 
+        of matrix at frequency omega.
+
+        Arguments:
+        matrix: string, options are 'MH', 'prop' and 'prop_inv'
+        omega: frequency as 2*pi*f, with f in Hz
+        """
+        MH = self.create_MH(omega)
+        if matrix == 'MH':
+            eig, vr = np.linalg.eig(MH)
+            vl = np.linalg.inv(vr)
+            return eig, np.transpose(vr), vl
+         
+        Q = np.linalg.inv(np.identity(self.dimension) - MH(omega))
+        P = np.dot(Q(omega), MH(omega))
+        if matrix == 'prop':
+            eig, vr = np.linalg.eig(P)
+        elif matrix == 'prop_inv':
+            eig, vr = np.linalg.eig(np.linalg.inv(P))
+        vl = np.linalg.inv(vr)
+ 
+        return eig, np.transpose(vr), vl
