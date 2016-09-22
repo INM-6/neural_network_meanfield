@@ -18,7 +18,11 @@ import numpy as np
 import mpmath
 import siegert
 from scipy.special import zetac
-import fortran_functions as ff
+try:
+    import fortran_functions as ff
+except ImportError as ie:
+    print 'fortran extensions not compiled, falling back to mpmath library'
+    ff = None
 
 
 def transfer_function_taylor(omega, params, mu, sigma):
@@ -105,35 +109,36 @@ def transfer_function_shift(omega, params, mu, sigma):
 # Auxiliary functions
 
 
-def Phi(a, x):
-    """
-    Calculates Phi(a,x) = exp(x**2/4)*U(a,x), where U(a,x) is the
-    parabolic cylinder function. Implementation uses the relation to
-    kummers function (Eq.19.12.1 and 13.1.32 in Handbook of
-    mathematical Functions, Abramowitz and Stegun, 1972, Dover
-    Puplications, New York). The latter are implemented in Fortran90.
-    """
+if ff is not None:
+    def Phi(a, x):
+        """
+        Calculates Phi(a,x) = exp(x**2/4)*U(a,x), where U(a,x) is the
+        parabolic cylinder function. Implementation uses the relation to
+        kummers function (Eq.19.12.1 and 13.1.32 in Handbook of
+        mathematical Functions, Abramowitz and Stegun, 1972, Dover
+        Puplications, New York). The latter are implemented in Fortran90.
+        """
+    
+        fac1 = np.sqrt(np.pi) * 2**(-0.25 - 1 / 2. * a)
+        fac2 = np.sqrt(np.pi) * 2**(0.25 - 1 / 2. * a) * x
+        kummer1 = ff.kummers_function(0.5 * a + 0.25, 0.5, 0.5 * x**2)
+        term1 = kummer1 / mpmath.gamma(0.75 + 0.5 * a)
+        kummer2 = ff.kummers_function(0.5 * a + 0.75, 1.5, 0.5 * x**2)
+        term2 = kummer2 / mpmath.gamma(0.25 + 0.5 * a)
+        value = fac1 * term1 + fac2 * term2
+        value = complex(value.real, value.imag)
+        return value
 
-    fac1 = np.sqrt(np.pi) * 2**(-0.25 - 1 / 2. * a)
-    fac2 = np.sqrt(np.pi) * 2**(0.25 - 1 / 2. * a) * x
-    kummer1 = ff.kummers_function(0.5 * a + 0.25, 0.5, 0.5 * x**2)
-    term1 = kummer1 / mpmath.gamma(0.75 + 0.5 * a)
-    kummer2 = ff.kummers_function(0.5 * a + 0.75, 1.5, 0.5 * x**2)
-    term2 = kummer2 / mpmath.gamma(0.25 + 0.5 * a)
-    value = fac1 * term1 + fac2 * term2
-    value = complex(value.real, value.imag)
-    return value
-
-def Phi_mpmath(z, x):
-    """
-    Calculates Phi(a,x) = exp(x**2/4)*U(a,x), where U(a,x) is the
-    parabolic cylinder function. Implementation uses the mpmath
-    functions. This is slower than the Fortran implementation `Phi`
-    and not used in this package but added for completeness.
-    """
-
-    value = np.exp(0.25*x**2) * complex(mpmath.pcfu(z, -x))
-    return value
+else: # fall back to Python code if fortran extension is not compiled 
+    def Phi(z, x):
+        """
+        Calculates Phi(a,x) = exp(x**2/4)*U(a,x), where U(a,x) is the
+        parabolic cylinder function. Implementation uses the mpmath
+        functions. This is slower than the Fortran implementation `Phi`
+        and not used in this package but added for completeness.
+        """
+        value = np.exp(0.25*x**2) * complex(mpmath.pcfu(z, -x))
+        return value
 
 def d_Phi(z, x):
     """

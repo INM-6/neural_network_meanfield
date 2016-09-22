@@ -27,7 +27,7 @@ class Setup(object):
         Arguments:
         params: dictionary, keys overwrite or extend default parameter
         """
-        params_default = {'fmin': 0.1, 'fmax': 150., 'df': 1.0/(2*np.pi),
+        params_default = {'fmin': 0.1, 'fmax': 500., 'df': 1.0/(2*np.pi),
                           'to_file': True, 'from_file': True}
         params_default.update(params)
         return params_default
@@ -48,7 +48,11 @@ class Setup(object):
         if circ.label == 'microcircuit':
             params, param_keys = pc.get_data_microcircuit(new_params)
             new_vars['param_keys'] = param_keys
-            new_vars['param_hash'] = pc.create_hashes(params, param_keys) 
+            new_vars['param_hash'] = pc.create_hashes(params, param_keys)
+        elif circ.label == 'mesocircuit':
+            params, param_keys = pc.get_data_mesocircuit(new_params)
+            new_vars['param_keys'] = param_keys
+            new_vars['param_hash'] = pc.create_hashes(params, param_keys)            
         else:
             raise RuntimeError('Parameter file missing for label.')
         new_vars['params'] = params
