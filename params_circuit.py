@@ -149,7 +149,7 @@ def get_data_mesocircuit(new_params={}):
     # defined above, truncation at zero)
     params['delay_dist'] = 'none'
     # PSC amplitude in pA
-    params['w'] = 87.8*0.5
+    params['w'] = 87.8*0.5 # 0.5 being the default time constant of the microcircuit
 
     ### Connectivity 
     # indegrees
