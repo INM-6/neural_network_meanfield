@@ -7,12 +7,13 @@ decaying synapses.
 Dependencies
 ------------
 
-libmathlib2-gfortran
-libmathlib2-dev
--> available via sudo apt-get install
-
 h5py_wrapper
 -> available on https://github.com/INM-6/h5py_wrapper
+
+libmathlib2-gfortran
+libmathlib2-dev
+-> optional, available via sudo apt-get install
+
 
 
 Documentation
