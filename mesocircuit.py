@@ -1,17 +1,13 @@
 #!/usr/bin/env python
-
-# Calculation of firing rates
-
-import circuit
-
-
-# Calculation of population rate spectra
+'''Calculation of population rates and rate spectra'''
 
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 import numpy as np
+import os
 import circuit
 
+# plot tuning
 plt.rcParams.update({
     'axes.titlesize': u'small'
 })
@@ -25,11 +21,12 @@ def colorbar(fig, ax, im):
     cbar.locator = MaxNLocator(nbins=4)
     cbar.update_ticks()
 
-
+# parameters
 dic = {'dsd': 1.0,          # not sure what this does, not used anywhere that I can find
        'delay_dist': 'truncated_gaussian',
        # 'Next' : np.array([1796, 1686, 2000, 2064, 1938, 1941, 3296, 2382]), # noise indegrees
-       'Next' : np.array([1796, 1686, 2374, 2064, 1938, 1941, 3296, 2382]),  # noise indegrees
+       'Next' : np.array([1796, 1686, 2200, 2064, 1938, 1941, 3296, 2382]), # noise indegrees
+       # 'Next' : np.array([1796, 1686, 2374, 2064, 1938, 1941, 3296, 2382]),  # noise indegrees
        'w' : 87.8*0.5,      # PSC amplitude in pA, mul by time constant of Potjans model
        'tauf' : 0.5         # synapse time constant in ms
        }
@@ -40,6 +37,13 @@ print 'firing rates', circ.th_rates
 # get power spectra and sensitivity measures
 circ = circuit.Circuit('mesocircuit', dic, analysis_type='dynamical')
 
+# prep folder for figures output
+figdir = os.path.join('figures', circ.param_hash)
+if not os.path.isdir(os.path.split(figdir)[0]):
+    os.mkdir(os.path.split(figdir)[0])
+if not os.path.isdir(figdir):
+    os.mkdir(figdir)
+    
 
 # plot power spectra
 fig, ax = plt.subplots(1, 1, figsize=(10, 10))
@@ -51,7 +55,7 @@ ax.set_xlabel(r'$f$ (Hz)')
 ax.set_ylabel(r'rate PSD (Hz$^2$/s)')
 ax.legend(loc='best', fontsize='small')
 ax.grid('on')
-fig.savefig('mesocircuit_PSD.pdf', bbox_inches='tight')
+fig.savefig(os.path.join(figdir, 'mesocircuit_PSD.pdf'), bbox_inches='tight')
 # plt.close(fig)
 
 
@@ -75,7 +79,7 @@ colorbar(fig, ax, im)
 # trash unused axes
 for i in range(freqs.size, nrows*ncols):
     plt.delaxes(axes.flatten()[i])
-fig.savefig('mesocircuit_Re(Z(f)).pdf', bbox_inches='tight')    
+fig.savefig(os.path.join(figdir, 'mesocircuit_Re(Z(f)).pdf'), bbox_inches='tight')    
 # plt.close(fig)
 
 
@@ -92,7 +96,7 @@ colorbar(fig, ax, im)
 # trash unused axes
 for i in range(freqs.size, nrows*ncols):
     plt.delaxes(axes.flatten()[i])
-fig.savefig('mesocircuit_Im(Z(f)).pdf', bbox_inches='tight')    
+fig.savefig(os.path.join(figdir, 'mesocircuit_Im(Z(f)).pdf'), bbox_inches='tight')    
 # plt.close(fig)
 
 
@@ -123,7 +127,7 @@ colorbar(fig, ax, im)
 # trash unused axes
 for i in range(freqs.size, nrows*ncols):
     plt.delaxes(axes.flatten()[i])
-fig.savefig('mesocircuit_Z_amp(f)).pdf', bbox_inches='tight')    
+fig.savefig(os.path.join(figdir, 'mesocircuit_Z_amp(f)).pdf'), bbox_inches='tight')    
 # plt.close(fig)
 
 
@@ -153,7 +157,7 @@ colorbar(fig, ax, im)
 # trash unused axes
 for i in range(freqs.size, nrows*ncols):
     plt.delaxes(axes.flatten()[i])
-fig.savefig('mesocircuit_Z_freq(f)).pdf', bbox_inches='tight')    
+fig.savefig(os.path.join(figdir, 'mesocircuit_Z_freq(f)).pdf'), bbox_inches='tight')    
 # plt.close(fig)
 
 
@@ -176,7 +180,7 @@ colorbar(fig, ax, im)
 # trash unused axes
 for i in range(modes.size, nrows*ncols):
     plt.delaxes(axes.flatten()[i])
-fig.savefig('mesocircuit_Re(Z(f=0))_all_modes.pdf', bbox_inches='tight')    
+fig.savefig(os.path.join(figdir, 'mesocircuit_Re(Z(f=0))_all_modes.pdf'), bbox_inches='tight')    
 # plt.close(fig)
 
 
@@ -199,7 +203,7 @@ colorbar(fig, ax, im)
 # trash unused axes
 for i in range(modes.size, nrows*ncols):
     plt.delaxes(axes.flatten()[i])
-fig.savefig('mesocircuit_Im(Z(f=0))_all_modes.pdf', bbox_inches='tight')    
+fig.savefig(os.path.join(figdir, 'mesocircuit_Im(Z(f=0))_all_modes.pdf'), bbox_inches='tight')    
 # plt.close(fig)
 
 
@@ -239,7 +243,7 @@ for f in freqs:
     # trash unused axes
     for i in range(modes.size, nrows*ncols):
         plt.delaxes(axes.flatten()[i])
-    fig.savefig('mesocircuit_Z_amp(f={})_all_modes).pdf'.format(f), bbox_inches='tight')    
+    fig.savefig(os.path.join(figdir, 'mesocircuit_Z_amp(f={})_all_modes).pdf').format(f), bbox_inches='tight')    
     # plt.close(fig)
     
 
@@ -273,9 +277,9 @@ for f in freqs:
     # trash unused axes
     for i in range(modes.size, nrows*ncols):
         plt.delaxes(axes.flatten()[i])
-    fig.savefig('mesocircuit_Z_freq(f={})_all_modes).pdf'.format(f), bbox_inches='tight')    
+    fig.savefig(os.path.join(figdir, 'mesocircuit_Z_freq(f={})_all_modes).pdf').format(f), bbox_inches='tight')    
     # plt.close(fig)
         
 
 
-# plt.show()
+plt.show()
