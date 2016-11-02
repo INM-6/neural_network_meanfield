@@ -1,4 +1,4 @@
-"""setup.py: Class handling the initialisation of all class variables 
+"""tools.py: Class handling the initialisation of all class variables 
 available in Circuit and Analytics.
 
 Authors: Hannah Bos, Jannis Schuecker
@@ -8,12 +8,12 @@ import numpy as np
 import params_circuit as pc
 
 
-class Setup(object):
+class ParamsSetup(object):
     """Class handling parameters and class variables of Circuit and 
     Analytics such that theses two classes share their variables at all
     times.
     Class variables of Circuit() are set by handing a Circuit() object 
-    to the methods in Setup(), which return a dictionary with all new or 
+    to the methods in ParamSetup(), which return a dictionary with all new or 
     altered variables. Circuit() takes care of setting the class
     variables in Analytics().
     """

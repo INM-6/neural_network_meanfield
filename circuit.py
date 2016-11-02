@@ -5,7 +5,7 @@ Authors: Hannah Bos, Jannis Schuecker
 """
 
 import numpy as np
-from setup import Setup
+from tools import ParamSetup
 from analytics import Analytics
 
 
@@ -44,7 +44,7 @@ class Circuit(object):
     """
     def __init__(self, label, params={}, **kwargs):
         self.label = label
-        self.setup = Setup()
+        self.setup = ParamSetup()
         self.ana = Analytics()
         if 'analysis_type' in kwargs:
             self.analysis_type = kwargs['analysis_type']
