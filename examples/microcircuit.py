@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 import numpy as np
 import os
-import circuit
+from pymeanfield import Circuit
 
 # plot tuning
 plt.rcParams.update({
@@ -22,13 +22,13 @@ def colorbar(fig, ax, im):
     cbar.update_ticks()
 
 
-circ = circuit.Circuit('microcircuit', analysis_type='stationary')
+circ = Circuit('microcircuit', analysis_type='stationary')
 print 'firing rates', circ.th_rates
 
 # Calculation of population rate spectra
 
 dic = {'dsd': 1.0, 'delay_dist': 'truncated_gaussian'}
-circ = circuit.Circuit('microcircuit', dic)
+circ = Circuit('microcircuit', dic)
 
 freqs, power = circ.create_power_spectra()
 

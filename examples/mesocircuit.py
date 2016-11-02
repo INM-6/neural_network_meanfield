@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 import numpy as np
 import os
-import circuit
+from pymeanfield import Circuit
 
 # plot tuning
 plt.rcParams.update({
@@ -31,11 +31,11 @@ dic = {'dsd': 1.0,          # not sure what this does, not used anywhere that I 
        'tauf' : 0.5         # synapse time constant in ms
        }
 # get rate predictions
-circ = circuit.Circuit('mesocircuit', dic, analysis_type='stationary')
+circ = Circuit('mesocircuit', dic, analysis_type='stationary')
 print 'firing rates', circ.th_rates
 
 # get power spectra and sensitivity measures
-circ = circuit.Circuit('mesocircuit', dic, analysis_type='dynamical')
+circ = Circuit('mesocircuit', dic, analysis_type='dynamical')
 
 # prep folder for figures output
 figdir = os.path.join('mesocircuit_figures', circ.param_hash)
