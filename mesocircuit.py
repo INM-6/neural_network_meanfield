@@ -38,7 +38,7 @@ print 'firing rates', circ.th_rates
 circ = circuit.Circuit('mesocircuit', dic, analysis_type='dynamical')
 
 # prep folder for figures output
-figdir = os.path.join('figures', circ.param_hash)
+figdir = os.path.join('mesocircuit_figures', circ.param_hash)
 if not os.path.isdir(os.path.split(figdir)[0]):
     os.mkdir(os.path.split(figdir)[0])
 if not os.path.isdir(figdir):

@@ -9,7 +9,7 @@ Authors: Hannah Bos, Jannis Schuecker
 
 import numpy as np
 import hashlib as hl
-import h5py_wrapper.wrapper as h5
+# import h5py_wrapper.wrapper as h5
 
 
 def get_data_microcircuit(new_params={}):
