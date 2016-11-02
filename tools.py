@@ -8,7 +8,7 @@ import numpy as np
 import params_circuit as pc
 
 
-class ParamsSetup(object):
+class ParamSetup(object):
     """Class handling parameters and class variables of Circuit and 
     Analytics such that theses two classes share their variables at all
     times.
