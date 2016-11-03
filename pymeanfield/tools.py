@@ -49,10 +49,6 @@ class ParamSetup(object):
             params, param_keys = pc.get_data_microcircuit(new_params)
             new_vars['param_keys'] = param_keys
             new_vars['param_hash'] = pc.create_hashes(params, param_keys)
-        elif circ.label == 'mesocircuit':
-            params, param_keys = pc.get_data_mesocircuit(new_params)
-            new_vars['param_keys'] = param_keys
-            new_vars['param_hash'] = pc.create_hashes(params, param_keys)            
         else:
             raise RuntimeError('Parameter file missing for label.')
         new_vars['params'] = params
