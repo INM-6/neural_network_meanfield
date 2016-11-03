@@ -21,21 +21,80 @@ def colorbar(fig, ax, im):
     cbar.locator = MaxNLocator(nbins=4)
     cbar.update_ticks()
 
-# parameters
-dic = {'dsd': 1.0,          # not sure what this does, not used anywhere that I can find
-       'delay_dist': 'truncated_gaussian',
-       # 'Next' : np.array([1796, 1686, 2000, 2064, 1938, 1941, 3296, 2382]), # noise indegrees
-       'Next' : np.array([1796, 1686, 2200, 2064, 1938, 1941, 3296, 2382]), # noise indegrees
-       # 'Next' : np.array([1796, 1686, 2374, 2064, 1938, 1941, 3296, 2382]),  # noise indegrees
-       'w' : 87.8*0.5,      # PSC amplitude in pA, mul by time constant of Potjans model
-       'tauf' : 0.5         # synapse time constant in ms
-       }
+
+def get_mesocircuit_params():
+    '''returns parameters adapted from the microcircuit parameterset'''
+    params = {}
+    
+    params['populations'] = ['23E', '23I', '4E', '4I', 
+                             '5E', '5I', '6E', '6I']
+    # number of neurons in populations
+    params['N'] = np.array([330928, 93344, 350640, 87664, 77600, 17040, 230320, 47168])
+        
+    ### Neurons
+    params['C'] = 250.0    # membrane capacitance in pF
+    params['taum'] = 10.0  # membrane time constant in ms
+    params['taur'] = 2.0   # refractory time in ms
+    params['V0'] = -65.0   # reset potential in mV
+    params['Vth'] = -50.0  # threshold of membrane potential in mV
+    
+    ### Synapses
+    params['tauf'] = 0.5  # synaptic time constant in ms
+    params['de'] = 1.5    # delay of excitatory connections in ms
+    params['di'] = 0.75   # delay of inhibitory connections in ms
+    # standard deviation of delay of excitatory connections in ms
+    params['de_sd'] = params['de']*0.5 
+    # standard deviation of delay of inhibitory connections in ms
+    params['di_sd'] = params['di']*0.5
+    # delay distribution, options: 'none', 'gaussian' (standard deviation 
+    # is defined above), 'truncated gaussian' (standard deviation is 
+    # defined above, truncation at zero)
+    params['delay_dist'] = 'truncated_gaussian' #'none'
+    # PSC amplitude in pA
+    params['w'] = 87.8*0.5 # 0.5 being the default time constant of the microcircuit
+    
+    ### Connectivity 
+    # indegrees
+    params['I'] = (np.array([
+        [908052706, 429956872, 415727848, 194859668, 67971857, 0, 47420816, 0],
+        [342156175, 98313800, 84752610, 34561135, 44894844, 0, 7390917, 0],
+        [73143801, 15807409, 501095081, 341493367, 14923606, 146694, 299954115, 0],
+        [164520432, 1942287, 200388899, 101101409, 1837434, 0, 175415933, 0],
+        [211873205, 36965998, 112686078, 3174062, 41092415, 40948453, 29863645, 0],
+        [25346349, 3505443, 12579906, 268973, 6508893, 7602929, 2763177, 0],
+        [97369358, 11615440, 139575131, 27448088, 83861841, 6332481, 172194137, 202086287],
+        [46567837, 360336, 4602613, 169201, 8306879, 526387, 58658806, 26429834]]).T / params['N'].astype(float)).T
+    # ratio of inhibitory to excitatory weights
+    params['g']=4.0
+    
+    ### External input
+    params['v_ext'] = 8.0 # in Hz
+    # number of external neurons
+    params['Next'] = np.array([1796, 1686, 2200, 2064, 1938, 1941, 3296, 2382])
+    
+    ### Neural response
+    # Transfer function is either calculated analytically ('analytical')
+    # or approximated by an exponential ('empirical'). In the latter case
+    # the time constants in response to an incoming impulse ('tau_impulse'), 
+    # as well as the instantaneous rate jumps ('delta_f') have to be
+    # specified.
+    params['tf_mode'] = 'analytical'   
+    # number of modes used when fast response time constants are calculated
+    params['num_modes'] = 1
+           
+    # file storing results
+    params['datafile'] = 'results_mesocircuit.h5'
+
+    return params
+
+params = get_mesocircuit_params()
+
 # get rate predictions
-circ = Circuit('mesocircuit', dic, analysis_type='stationary')
+circ = Circuit('microcircuit', params, analysis_type='stationary')
 print 'firing rates', circ.th_rates
 
 # get power spectra and sensitivity measures
-circ = Circuit('mesocircuit', dic, analysis_type='dynamical')
+circ = Circuit('microcircuit', params, analysis_type='dynamical')
 
 # prep folder for figures output
 figdir = os.path.join('mesocircuit_figures', circ.param_hash)
