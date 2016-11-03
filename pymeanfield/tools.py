@@ -27,7 +27,7 @@ class ParamSetup(object):
         Arguments:
         params: dictionary, keys overwrite or extend default parameter
         """
-        params_default = {'fmin': 0.1, 'fmax': 500., 'df': 1.0/(2*np.pi),
+        params_default = {'fmin': 1., 'fmax': 1000., 'df': 1.0/(2*np.pi),
                           'to_file': True, 'from_file': True}
         params_default.update(params)
         return params_default
@@ -65,7 +65,9 @@ class ParamSetup(object):
         w_min = 2*np.pi*circ.fmin
         w_max = 2*np.pi*circ.fmax
         dw = 2*np.pi*circ.df
-        new_vars['omegas'] = np.arange(w_min, w_max, dw)
+        # new_vars['omegas'] = np.arange(w_min, w_max, dw)
+        # log-lin binned data
+        new_vars['omegas'] = 10**np.linspace(np.log10(w_min), np.log10(w_max), 51) 
         return new_vars
 
     def get_params_for_power_spectrum(self, circ):
