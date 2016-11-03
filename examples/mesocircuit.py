@@ -26,8 +26,8 @@ def get_mesocircuit_params():
     '''returns parameters adapted from the microcircuit parameterset'''
     params = {}
     
-    params['populations'] = ['23E', '23I', '4E', '4I', 
-                             '5E', '5I', '6E', '6I']
+    params['populations'] = ['L23E', 'L23I', 'L4E', 'L4I', 
+                             'L5E', 'L5I', 'L6E', 'L6I']
     # number of neurons in populations
     params['N'] = np.array([330928, 93344, 350640, 87664, 77600, 17040, 230320, 47168])
         
