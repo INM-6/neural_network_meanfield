@@ -34,7 +34,12 @@ class Circuit(object):
                       including the transfer function for all populations
     fmin: minimal frequency in Hz, default: 0.1 Hz
     fmax: maximal frequency in Hz, default: 150 Hz
-    df: frequency spacing in Hz, default: 1.0/(2*np.pi) Hz
+    fmapping: str in ['linear', 'log']
+    fnum: number of log-linearly distributied frequencies,
+        used if fmapping=='log'
+    df: frequency spacing in Hz, default: 1.0/(2*np.pi) Hz,
+        used if fmapping=='linear'
+    
     to_file: boolean specifying whether firing rates and transfer 
              functions are written to file, default: True
     from_file: boolean specifying whether firing rates and transfer 
