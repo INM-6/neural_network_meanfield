@@ -77,13 +77,13 @@ class Setup(object):
         """
         new_vars = {}
         if circ.params['tf_mode'] == 'analytical':
-            new_vars['M'] = circ.params['I']*circ.params['W']
+            new_vars['M'] = circ.params['I']*circ.params['W']*circ.params['tauf']
             new_vars['trans_func'] = circ.ana.create_transfer_function()
         else:
             for key in ['tau_impulse', 'delta_f']:
                 new_vars[key] = circ.params[key]
             new_vars['H_df'] = circ.ana.create_H_df(new_vars, 'empirical')
-            new_vars['M'] = circ.params['I']*circ.params['W']
+            new_vars['M'] = circ.params['I']*circ.params['W']*circ.params['tauf']
 
         # copy of full connectivity (needed when connectivity is reduced)
         new_vars['M_full'] = new_vars['M']

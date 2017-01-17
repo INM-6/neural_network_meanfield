@@ -77,7 +77,7 @@ class TestCircuit(unittest.TestCase):
         params = {}
         params['tf_mode'] = 'empirical' 
         params['tau_impulse'] = np.array([8.555, 5.611, 4.167, 4.381, 4.131, 3.715, 4.538, 3.003])
-        params['delta_f'] = np.array([0.0880, 0.458, 0.749, 0.884, 1.183, 1.671, 0.140, 1.710])/self.net.params['w']
+        params['delta_f'] = np.array([0.0880, 0.458, 0.749, 0.884, 1.183, 1.671, 0.140, 1.710])/(self.net.params['w']*self.net.params['tauf'])
         net = circuit.Circuit('microcircuit', params)
         freqs, power = net.create_power_spectra()
         power_test = h5.load_h5(self.test_data, 'empirical/power')

@@ -85,7 +85,7 @@ class Analytics(object):
     def firing_rates_integration(self):
         '''Returns vector of population firing rates in Hz.'''
         print 'Calculate firing rates.'
-        fac = 1 / (self.params['C'])
+        fac = self.params['tauf'] / self.params['C']
         # conversion from ms to s
         taum = self.params['taum'] * 1e-3            
         tauf = self.params['tauf'] * 1e-3           
@@ -161,8 +161,9 @@ class Analytics(object):
         """Returns transfer functions for all populations."""
         trans_func = []
         for i in range(self.dimension):
-            mu = self.mu[i]*self.taum*1e-3/self.C 
-            sigma = np.sqrt(self.var[i]*self.taum*1e-3)/self.C
+            fac = self.tauf / self.C
+            mu = self.mu[i]*self.taum*1e-3*fac
+            sigma = np.sqrt(self.var[i]*self.taum*1e-3)*fac
             label = str(mu)+str(sigma)
             label += str(self.fmin)+str(self.fmax)+str(self.df)
 
