@@ -35,13 +35,13 @@ class Analytics(object):
 
     def add_to_file(self, dic):
         '''Adds data to h5 file, with data and path specified in dict.'''
-        self.file_base = os.getcwd()+'/'+self.params['datafile']
+        self.file_base = os.getcwd()+'/'+self.datafile
         h5.add_to_h5(self.file_base, {self.param_hash: dic}, 
                      'a', overwrite_dataset=True)
 
     def read_from_file(self, path):
         '''Reads data from h5 file at location path.'''
-        self.file_base = os.getcwd()+'/'+self.params['datafile']
+        self.file_base = os.getcwd()+'/'+self.datafile
         path_base = '/' + self.param_hash + '/' 
         data = h5.load_h5(self.file_base, path_base + path)
         return data
@@ -85,12 +85,12 @@ class Analytics(object):
     def firing_rates_integration(self):
         '''Returns vector of population firing rates in Hz.'''
         print 'Calculate firing rates.'
-        fac = self.params['tauf'] / self.params['C']
+        fac = self.tauf / self.C
         # conversion from ms to s
-        taum = self.params['taum'] * 1e-3            
-        tauf = self.params['tauf'] * 1e-3           
-        taur = self.params['taur'] * 1e-3           
-        dV =  self.params['Vth'] - self.params['V0']
+        taum = self.taum * 1e-3
+        tauf = self.tauf * 1e-3
+        taur = self.taur * 1e-3
+        dV =  self.Vth - self.V0
         rate_function = lambda mu, sigma: siegert.nu0_fb433(
             taum, tauf, taur, dV, 0., mu, sigma)
 
