@@ -50,7 +50,7 @@ def get_data_microcircuit(new_params={}):
     # defined above, truncation at zero)
     params['delay_dist'] = 'none'
     # PSC amplitude in pA
-    params['w'] = 87.8*0.5
+    params['w'] = 87.8
 
     ### Connectivity 
     # indegrees
