@@ -5,7 +5,7 @@ Authors: Hannah Bos, Jannis Schuecker
 """
 
 import numpy as np
-from setup import Setup
+from tools import ParamSetup
 from analytics import Analytics
 
 
@@ -34,7 +34,12 @@ class Circuit(object):
                       including the transfer function for all populations
     fmin: minimal frequency in Hz, default: 0.1 Hz
     fmax: maximal frequency in Hz, default: 150 Hz
-    df: frequency spacing in Hz, default: 1.0/(2*np.pi) Hz
+    fmapping: str in ['linear', 'log']
+    fnum: number of log-linearly distributied frequencies,
+        used if fmapping=='log'
+    df: frequency spacing in Hz, default: 1.0/(2*np.pi) Hz,
+        used if fmapping=='linear'
+    
     to_file: boolean specifying whether firing rates and transfer 
              functions are written to file, default: True
     from_file: boolean specifying whether firing rates and transfer 
@@ -44,7 +49,7 @@ class Circuit(object):
     """
     def __init__(self, label, params={}, **kwargs):
         self.label = label
-        self.setup = Setup()
+        self.setup = ParamSetup()
         self.ana = Analytics()
         if 'analysis_type' in kwargs:
             self.analysis_type = kwargs['analysis_type']

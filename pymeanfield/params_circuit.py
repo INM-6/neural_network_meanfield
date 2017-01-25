@@ -9,7 +9,6 @@ Authors: Hannah Bos, Jannis Schuecker
 
 import numpy as np
 import hashlib as hl
-import h5py_wrapper.wrapper as h5
 
 
 def get_data_microcircuit(new_params={}):
@@ -110,6 +109,7 @@ def get_data_microcircuit(new_params={}):
     params = get_dependend_params_microcircuit(params)
 
     return params, param_keys
+
 
 def get_dependend_params_microcircuit(params):
     """Returns dictionary with parameter which can be derived from the
