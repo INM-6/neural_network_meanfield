@@ -91,7 +91,7 @@ class Analytics(object):
         Calculates population firing rates in Hz according to Eq. 2.38 in
         Moreno-Bote, R. & Parga, N. (2010). Response of integrate-and-fire neurons
         to noisy inputs filtered by synapses with arbitrary timescales: Firing rate and
-        correlations. Neural Comput., 22(6), 1528–1572.
+        correlations. Neural Comput., 22(6), 1528-1572.
         '''
         print 'Calculate firing rates.'
         taus = self.tau_slow

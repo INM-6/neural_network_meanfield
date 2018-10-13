@@ -40,12 +40,12 @@ References
 
 - Brunel N, Hakim V (1999) Fast global oscillations in networks of
   integrate-and-fire neurons with low firing rates. Neural Comput.
-  11:1621–1671.
+  11:1621-1671.
 - Fourcaud N, Brunel N (2002) Dynamics of the firing probability of noisy
   integrate-and-fire neurons. Neural Comput. 14:2057–2110.
 - Moreno-Bote, R. & Parga, N. (2010). Response of integrate-and-fire neurons
   to noisy inputs filtered by synapses with arbitrary timescales: Firing rate
-  and correlations. Neural Comput., 22(6), 1528–1572.
+  and correlations. Neural Comput., 22(6), 1528-1572.
 - Schuecker J, Diesmann M, Helias M. Modulated escape from a metastable
   state driven by colored noise. Phys Rev E. 2015 Nov;92:052119.
   Available from: http://link.aps.org/doi/10.1103/PhysRevE.92.052119.
