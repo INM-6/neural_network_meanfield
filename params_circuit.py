@@ -1,6 +1,6 @@
 """params_circuit.py: Summarizes parameters of neurons and the network in
 dictionary. Each parameter set implements two functions. One specifying
-all default parameter and one calculating the parameter that can be 
+all default parameter and one calculating the parameter that can be
 derived from the default parameter. The default parameter will be used
 to create a hash when saving results.
 
@@ -24,12 +24,12 @@ def get_data_microcircuit(new_params={}):
     """
     params = {}
 
-    params['populations'] = ['23E', '23I', '4E', '4I', 
+    params['populations'] = ['23E', '23I', '4E', '4I',
                              '5E', '5I', '6E', '6I']
     # number of neurons in populations
-    params['N'] = np.array([20683, 5834, 21915, 5479, 
+    params['N'] = np.array([20683, 5834, 21915, 5479,
                             4850, 1065, 14395, 2948])
-        
+
     ### Neurons
     params['C'] = 250.0    # membrane capacitance in pF
     params['taum'] = 10.0  # membrane time constant in ms
@@ -38,24 +38,25 @@ def get_data_microcircuit(new_params={}):
     params['Vth'] = -50.0  # threshold of membrane potential in mV
 
     ### Synapses
-    params['tauf'] = 0.5  # synaptic time constant in ms
-    params['de'] = 1.5    # delay of excitatory connections in ms
-    params['di'] = 0.75   # delay of inhibitory connections in ms
+    params['tauf'] = 0.5       # fast synaptic time constant in ms
+    params['tau_slow'] = 100.0 # slow synaptic time constant in ms
+    params['de'] = 1.5         # delay of excitatory connections in ms
+    params['di'] = 0.75        # delay of inhibitory connections in ms
     # standard deviation of delay of excitatory connections in ms
-    params['de_sd'] = params['de']*0.5 
+    params['de_sd'] = params['de']*0.5
     # standard deviation of delay of inhibitory connections in ms
     params['di_sd'] = params['di']*0.5
-    # delay distribution, options: 'none', 'gaussian' (standard deviation 
-    # is defined above), 'truncated gaussian' (standard deviation is 
+    # delay distribution, options: 'none', 'gaussian' (standard deviation
+    # is defined above), 'truncated gaussian' (standard deviation is
     # defined above, truncation at zero)
     params['delay_dist'] = 'none'
     # PSC amplitude in pA
     params['w'] = 87.8*0.5
 
-    ### Connectivity 
+    ### Connectivity
     # indegrees
     params['I'] = np.array([
-        [2.19986486e+03, 1.07932007e+03, 9.79241261e+02, 4.67578108e+02, 
+        [2.19986486e+03, 1.07932007e+03, 9.79241261e+02, 4.67578108e+02,
         1.59240826e+02, 0, 1.09819852e+02, 0],
         [2.99000583e+03, 8.60261056e+02, 7.03691807e+02, 2.89693864e+02,
          3.80735859e+02, 0, 6.05863901e+01, 0],
@@ -71,6 +72,9 @@ def get_data_microcircuit(new_params={}):
          2.85670372e+02, 2.11899271e+01, 5.81635915e+02, 7.52183189e+02],
         [7.66905020e+02, 5.83683853e+00, 7.46380597e+01, 2.74016282e+00,
          1.36240841e+02, 8.55427408e+00, 9.79791723e+02, 4.59402985e+02]])
+    # ratio of slow synaptic currents
+    params['xs'] = np.zeros((8,8))
+    params['xs_ext'] = np.zeros(8)
     # ratio of inhibitory to excitatory weights
     params['g']=4.0
 
@@ -82,11 +86,11 @@ def get_data_microcircuit(new_params={}):
     ### Neural response
     # Transfer function is either calculated analytically ('analytical')
     # or approximated by an exponential ('empirical'). In the latter case
-    # the time constants in response to an incoming impulse ('tau_impulse'), 
+    # the time constants in response to an incoming impulse ('tau_impulse'),
     # as well as the instantaneous rate jumps ('delta_f') have to be
     # specified.
-    params['tf_mode'] = 'analytical'   
-    if params['tf_mode'] == 'empirical': 
+    params['tf_mode'] = 'analytical'
+    if params['tf_mode'] == 'empirical':
         params['tau_impulse'] = np.asarray([0.0 for i in range(8)])
         params['delta_f'] = np.asarray([0.0 for i in range(8)])
     # number of modes used when fast response time constants are calculated
@@ -99,13 +103,13 @@ def get_data_microcircuit(new_params={}):
     # the transfer function after it has been read from file
     for element in ['de', 'di', 'de_sd', 'di_sd', 'delay_dist']:
         param_keys.remove(element)
-       
+
     # file storing results
     params['datafile'] = 'results_microcircuit.h5'
 
     # update parameter dictionary with new parameters
     params.update(new_params)
-    
+
     # calculate all dependent parameters
     params = get_dependend_params_microcircuit(params)
 
@@ -135,7 +139,13 @@ def get_dependend_params_microcircuit(params):
     D[1:8:2] = np.ones(8)*params['di_sd']
     D = np.transpose(D)
     params['Delay_sd'] = D
-    
+
+    # fast and slow synaptic indegree currents
+    params['I_fast'] = params['I']*(1.-params['xs'])
+    params['I_slow'] = params['I']*params['xs']
+    params['Next_fast'] = params['Next']*(1.-params['xs_ext'])
+    params['Next_slow'] = params['Next']*params['xs_ext']
+
     return params
 
 def create_hashes(params, param_keys):
@@ -148,5 +158,3 @@ def create_hashes(params, param_keys):
         else:
             label += str(value)
     return hl.md5(label).hexdigest()
-
-

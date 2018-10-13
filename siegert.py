@@ -1,6 +1,6 @@
 """siegert.py: Function calculating the firing rates of leaky
 integrate-and-fire neurons given their parameter and mean and variance
-of the input. Rates rates for delta shaped PSCs after Brunel & Hakim 1999. 
+of the input. Rates rates for delta shaped PSCs after Brunel & Hakim 1999.
 Rate of neuron with synaptic filtering with time constant tau_s after
 Fourcoud & Brunel 2002.
 
@@ -32,27 +32,29 @@ def nu_0(tau_m, tau_r, V_th, V_r, mu, sigma):
         return siegert2(tau_m, tau_r, V_th, V_r, mu, sigma)
 
 def nu0_fb(tau_m, tau_s, tau_r, V_th, V_r, mu, sigma):
-    
     alpha = np.sqrt(2)*abs(zetac(0.5)+1)
-    # effective threshold    
+    # effective threshold
     V_th1 = V_th + sigma*alpha/2.*np.sqrt(tau_s/tau_m)
-    # effective reset    
+    # effective reset
     V_r1 = V_r + sigma*alpha/2.*np.sqrt(tau_s/tau_m)
     # use standard Siegert with modified threshold and reset
     return nu_0(tau_m, tau_r, V_th1, V_r1, mu, sigma)
 
 # stationary firing rate of neuron with synaptic low-pass filter
-# of time constant tau_s driven by Gaussian noise with mean mu and 
+# of time constant tau_s driven by Gaussian noise with mean mu and
 # standard deviation sigma, from Fourcaud & Brunel 2002
-def nu0_fb433(tau_m, tau_s, tau_r, V_th, V_r, mu, sigma):
+def nu0_fb433(tau_m, tau_s, tau_r, V_th, V_r, mu, sigma, switch_fb=-7.):
     """Calculates stationary firing rates for exponential PSCs using
     expression with taylor expansion in k = sqrt(tau_s/tau_m) (Eq. 433
     in Fourcoud & Brunel 2002)
     """
-    
+
     alpha = np.sqrt(2.) * abs(zetac(0.5) + 1)
     x_th = np.sqrt(2.) * (V_th - mu) / sigma
     x_r = np.sqrt(2.) * (V_r - mu) / sigma
+
+    if x_r < switch_fb:
+        return nu0_fb(tau_m, tau_s, tau_r, V_th, V_r, mu, sigma)
 
     # preventing overflow in np.exponent in Phi(s)
     if x_th > 20.0 / np.sqrt(2.):

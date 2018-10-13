@@ -1,4 +1,4 @@
-"""setup.py: Class handling the initialisation of all class variables 
+"""setup.py: Class handling the initialisation of all class variables
 available in Circuit and Analytics.
 
 Authors: Hannah Bos, Jannis Schuecker
@@ -9,11 +9,11 @@ import params_circuit as pc
 
 
 class Setup(object):
-    """Class handling parameters and class variables of Circuit and 
+    """Class handling parameters and class variables of Circuit and
     Analytics such that theses two classes share their variables at all
     times.
-    Class variables of Circuit() are set by handing a Circuit() object 
-    to the methods in Setup(), which return a dictionary with all new or 
+    Class variables of Circuit() are set by handing a Circuit() object
+    to the methods in Setup(), which return a dictionary with all new or
     altered variables. Circuit() takes care of setting the class
     variables in Analytics().
     """
@@ -21,8 +21,8 @@ class Setup(object):
         pass
 
     def get_default_params(self, params):
-        """Returns dictionary with default parameter concerning the 
-        calculations in Analytics(). 
+        """Returns dictionary with default parameter concerning the
+        calculations in Analytics().
 
         Arguments:
         params: dictionary, keys overwrite or extend default parameter
@@ -33,13 +33,13 @@ class Setup(object):
         return params_default
 
     def get_circuit_params(self, circ, new_params):
-        """Returns dictionary with variables describing the circuit 
-        parameter. The default parameter are specified in 
+        """Returns dictionary with variables describing the circuit
+        parameter. The default parameter are specified in
         params_circuit.py and overwritten by new_params.
 
         Arguments:
         circ: instance of Circuit() class
-        new_params: parameter dictionary, used to overwrite default 
+        new_params: parameter dictionary, used to overwrite default
                     parameter specified in params_circuit.py
         label: string specifying the circuit parameter (listed in
                corresponding parameter dictionary in params_circuit.py)
@@ -48,14 +48,14 @@ class Setup(object):
         if circ.label == 'microcircuit':
             params, param_keys = pc.get_data_microcircuit(new_params)
             new_vars['param_keys'] = param_keys
-            new_vars['param_hash'] = pc.create_hashes(params, param_keys) 
+            new_vars['param_hash'] = pc.create_hashes(params, param_keys)
         else:
             raise RuntimeError('Parameter file missing for label.')
         new_vars['params'] = params
         return new_vars
 
     def get_params_for_analysis(self, circ):
-        """Returns dictionary of parameter which are derived from 
+        """Returns dictionary of parameter which are derived from
         default analysis and circuit parameter.
 
         Arguments:
@@ -76,9 +76,12 @@ class Setup(object):
         circ: instance of Circuit() class
         """
         new_vars = {}
+        new_vars['M_fast'] = circ.params['I_fast']*circ.params['W']
+        new_vars['M_slow'] = circ.params['I_slow']*circ.params['W']
         if circ.params['tf_mode'] == 'analytical':
             new_vars['M'] = circ.params['I']*circ.params['W']
             new_vars['trans_func'] = circ.ana.create_transfer_function()
+            new_vars['df_slow'] = circ.ana.get_df_slow(circ.params['tau_slow'])
         else:
             for key in ['tau_impulse', 'delta_f']:
                 new_vars[key] = circ.params[key]
@@ -87,10 +90,12 @@ class Setup(object):
 
         # copy of full connectivity (needed when connectivity is reduced)
         new_vars['M_full'] = new_vars['M']
+        new_vars['M_full_fast'] = new_vars['M_fast']
+        new_vars['M_full_slow'] = new_vars['M_slow']
         return new_vars
 
     def get_altered_circuit_params(self, circ, label):
-        """Returns dictionary of parameter which are derived from 
+        """Returns dictionary of parameter which are derived from
         parameter associated to circuit.
 
         Arguments:
@@ -102,7 +107,7 @@ class Setup(object):
             params = pc.get_dependend_params_microcircuit(circ.params)
         else:
             raise RuntimeError('Parameter file missing for label.')
-        new_vars['param_hash'] = pc.create_hashes(params, circ.param_keys) 
+        new_vars['param_hash'] = pc.create_hashes(params, circ.param_keys)
         new_vars['params'] = params
         return new_vars
 

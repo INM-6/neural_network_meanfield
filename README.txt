@@ -1,6 +1,6 @@
-Package calculating stationary and dynamical properties of networks 
-composed of leaky integrate-and-fire neurons connected with exponentially 
-decaying synapses.
+Package calculating stationary and dynamical properties of networks
+composed of leaky integrate-and-fire neurons connected with fast and slow
+exponentially decaying synapses.
 =========================================================================
 
 
@@ -18,38 +18,39 @@ h5py_wrapper
 Documentation
 -------------
 
-The main class is Circuit() in circuit.py. Depending on the chosen 
-analysis_type (None, 'stationary', 'dynamical'), an instantiation of 
-Circuit() offers function to calculate the stationary and dynamical 
+The main class is Circuit() in circuit.py. Depending on the chosen
+analysis_type (None, 'stationary', 'dynamical'), an instantiation of
+Circuit() offers function to calculate the stationary and dynamical
 properties of the circuit. For example:
 
-- firing rates (Brunel & Hakim 1999, Fourcoud & Brunel 2002)
+- firing rates (Brunel & Hakim 1999, Fourcoud & Brunel 2002,
+  Moreno-Bote, R. & Parga, N. (2010))
 - transfer functions (Schuecker 2015)
 - power spectra and their anatomical origin (Bos 2015, Schuecker 2015)
 
-By default the analysis_type is set to 'dynamical' and the transfer 
-function is calculated for all frequencies which might be time 
-consuming. The parameters of the circuit are specified in params_circuit.py. 
-For circuits that vary considerably in their parameters from the 
-microcircuit, for example in the number of populations, a new functions 
-(get_data_newcircuit()) should be defined. All parameters including the 
-analysis_type can be altered after the circuit has been initialised using 
-the function alter_params().
+By default the analysis_type is set to 'dynamical' and the transfer
+function is calculated for the all frequencies which might be time
+consuming. The paramters of the circuit are specified in params_circuit.py.
+All parameters including the analysis_type can be altered after the
+circuit has been initialised using the function alter_default_params().
 
 
 References
 ----------
 
-- Brunel N, Hakim V (1999) Fast global oscillations in networks of 
-  integrate-and-fire neurons with low firing rates. Neural Comput. 
+- Brunel N, Hakim V (1999) Fast global oscillations in networks of
+  integrate-and-fire neurons with low firing rates. Neural Comput.
   11:1621–1671.
-- Fourcaud N, Brunel N (2002) Dynamics of the firing probability of noisy 
+- Fourcaud N, Brunel N (2002) Dynamics of the firing probability of noisy
   integrate-and-fire neurons. Neural Comput. 14:2057–2110.
-- Schuecker J, Diesmann M, Helias M. Modulated escape from a metastable 
-  state driven by colored noise. Phys Rev E. 2015 Nov;92:052119. 
+- Moreno-Bote, R. & Parga, N. (2010). Response of integrate-and-fire neurons
+  to noisy inputs filtered by synapses with arbitrary timescales: Firing rate
+  and correlations. Neural Comput., 22(6), 1528–1572.
+- Schuecker J, Diesmann M, Helias M. Modulated escape from a metastable
+  state driven by colored noise. Phys Rev E. 2015 Nov;92:052119.
   Available from: http://link.aps.org/doi/10.1103/PhysRevE.92.052119.
-- Bos H, Diesmann M, Helias M (2015) Identifying anatomical origins of 
-  coexisting oscillations in the cortical microcircuit 
+- Bos H, Diesmann M, Helias M (2015) Identifying anatomical origins of
+  coexisting oscillations in the cortical microcircuit
   arXiv:1510.00642 [q-bio.NC]
 
 
