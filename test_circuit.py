@@ -85,9 +85,8 @@ class TestCircuit(unittest.TestCase):
         assert (np.allclose(power_test, power, rtol=self.rtol, atol=self.atol))
 
     def testPowerSpetraSlow(self):
-        xs = 0.4
-        # sim_mode = '4I4I'
-        xs_mode = 0.5
+        xs = 0.4 # fraction of slow currents in microcircuit
+        xs_mode = 0.5 # fraction of slow currents from 4I to 4I
         dsd = 1.0
         circ = circuit.Circuit('microcircuit', analysis_type=None)
         I_new = circ.I.copy()
